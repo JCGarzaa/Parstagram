@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     ParseUser user = ParseUser.getCurrentUser();
                     savePost(description, user, photoFile);
+                    goFeed();
                 }
             }
         });
@@ -88,8 +89,13 @@ public class MainActivity extends AppCompatActivity {
                 launchCamera();
             }
         });
-        
         queryPosts();
+    }
+
+    private void goFeed() {
+        Intent i = new Intent(this, FeedActivity.class);
+        startActivity(i);
+        finish();
     }
 
     private void launchCamera() {
