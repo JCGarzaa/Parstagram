@@ -19,7 +19,7 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivInstaIcon" />
+        app:layout_constraintTop_toBottomOf="@+id/ivInstaTitle" />
 
     <EditText
         android:id="@+id/etPassword"
@@ -47,7 +47,7 @@
         app:layout_constraintTop_toBottomOf="@+id/etPassword" />
 
     <ImageView
-        android:id="@+id/ivInstaIcon"
+        android:id="@+id/ivInstaTitle"
         android:layout_width="345dp"
         android:layout_height="112dp"
         android:layout_marginStart="32dp"
@@ -56,5 +56,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@drawable/nux_dayone_landing_logo" />
+        app:srcCompat="@drawable/nux_dayone_landing_logo" />
 </androidx.constraintlayout.widget.ConstraintLayout>

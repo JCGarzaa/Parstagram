@@ -30,7 +30,6 @@ import java.io.File;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
     public static final String TAG = "MainActivity";
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
 
@@ -46,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
 
         ivPostImage = findViewById(R.id.ivPostImage);
         etDescription = findViewById(R.id.etDescription);
@@ -67,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String description = etDescription.getText().toString();
-
                 if (description.isEmpty()) {
                     Toast.makeText(MainActivity.this, "Please enter a description.", Toast.LENGTH_SHORT).show();
                 }
@@ -104,8 +100,7 @@ public class MainActivity extends AppCompatActivity {
         // Create a File reference for future access
          photoFile = getPhotoFileUri(photoFileName);
 
-        // wrap File object into a content provider
-        // required for API >= 24
+        // wrap File object into a content provider, required for API >= 24
         Uri fileProvider = FileProvider.getUriForFile(MainActivity.this, "com.codepath.fileprovider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
@@ -123,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // by this point we have the camera photo on disk
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                // RESIZE BITMAP, see section below
                 // Load the taken image into a preview
                 ivPostImage.setImageBitmap(takenImage);
             } else { // Result was a failure
@@ -143,10 +137,8 @@ public class MainActivity extends AppCompatActivity {
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
             Log.d(TAG, "failed to create directory");
         }
-
         // Return the file target for the photo based on filename
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
-
     }
 
     private void savePost(String description, ParseUser user, File photoFile) {
@@ -165,11 +157,9 @@ public class MainActivity extends AppCompatActivity {
                     // to signify saved successfully
                     etDescription.setText("");
                     ivPostImage.setImageResource(0 );
-
                 }
             }
         });
-
     }
 
     private void queryPosts() {
@@ -179,11 +169,9 @@ public class MainActivity extends AppCompatActivity {
         query.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> posts, ParseException e) {
-                // TODO: REMOVE LOG TAGS
                 if (e != null) {
                     Log.e(TAG, "issue with getting posts", e);
                 }
-
             }
         });
     }
