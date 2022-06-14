@@ -20,6 +20,7 @@ public class FeedActivity extends AppCompatActivity {
 
     private RecyclerView rvPosts;
     private SwipeRefreshLayout swipeContainer;
+    private EndlessRecyclerViewScrollListener scrollListener;
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
 
@@ -28,12 +29,14 @@ public class FeedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed);
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+
         rvPosts = findViewById(R.id.rvPosts);
         // initialize the array that will hold posts and create a PostsAdapter
         allPosts = new ArrayList<>();
         adapter = new PostsAdapter(this, allPosts);
         rvPosts.setAdapter(adapter);
-        rvPosts.setLayoutManager(new LinearLayoutManager(this));
+        rvPosts.setLayoutManager(layoutManager);
 
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
@@ -41,7 +44,7 @@ public class FeedActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 allPosts.clear();           // clear data
-                queryPosts();               // fetch data
+                queryPosts(0);               // fetch data
                 swipeContainer.setRefreshing(false);        // hide refresh icon
             }
         });
@@ -51,16 +54,26 @@ public class FeedActivity extends AppCompatActivity {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        queryPosts();
+        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                //TODO: do something
+                queryPosts(allPosts.size());
+            }
+        };
+        rvPosts.setLayoutManager(layoutManager);
+        rvPosts.addOnScrollListener(scrollListener);
+        queryPosts(0);
     }
 
-    private void queryPosts() {
+    private void queryPosts(int skip) {
         // specify what type of data we want to query - Post.class
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         // include data referred by user key
         query.include(Post.KEY_USER);
         // limit query to latest 20 items
-        query.setLimit(20);
+        query.setLimit(5);
+        query.setSkip(skip);
         // order posts by creation date (newest first)
         query.addDescendingOrder("createdAt");
         // start an asynchronous call for posts
