@@ -16,8 +16,7 @@ public class Post extends ParseObject {
     public static final String KEY_DESCRIPTION =  "description";
     public static final String KEY_IMAGE = "image";
     public static final String KEY_USER = "user";
-    //TODO: public static final String KEY_PFP = "profilePic";
-    // TODO: ADD COLUMN
+
 
     public ParseFile getMedia() {
         return getParseFile("media");
@@ -47,8 +46,5 @@ public class Post extends ParseObject {
         put(KEY_USER, user);
     }
 
-    // TODO:
-//    public ParseFile getPFP() {
-//        return getParseFile(KEY_PFP);
-//    }
+
 }
