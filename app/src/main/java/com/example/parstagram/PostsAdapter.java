@@ -81,7 +81,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(context, DetailActivity.class);
-                    i.putExtra("post", Parcels.wrap(post));
+                    i.putExtra("post", post);
                     context.startActivity(i);
                 }
             });
