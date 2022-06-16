@@ -53,7 +53,6 @@ public class FeedActivity extends AppCompatActivity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -62,6 +61,13 @@ public class FeedActivity extends AppCompatActivity {
         };
         rvPosts.setLayoutManager(layoutManager);
         rvPosts.addOnScrollListener(scrollListener);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.clear();
         queryPosts(0);
     }
 
@@ -70,8 +76,9 @@ public class FeedActivity extends AppCompatActivity {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         // include data referred by user key
         query.include(Post.KEY_USER);
+        query.include(Post.KEY_LIKED_BY);
         // limit query to latest 20 items
-        query.setLimit(5);
+        query.setLimit(20);
         query.setSkip(skip);
         // order posts by creation date (newest first)
         query.addDescendingOrder("createdAt");
@@ -84,7 +91,6 @@ public class FeedActivity extends AppCompatActivity {
                     Log.e(TAG, "Issue with getting posts", e);
                     return;
                 }
-
                 // save received posts to list and notify adapter of new data
                 allPosts.addAll(posts);
                 adapter.notifyDataSetChanged();

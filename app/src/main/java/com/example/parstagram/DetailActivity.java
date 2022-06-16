@@ -1,10 +1,12 @@
 package com.example.parstagram;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.parse.FindCallback;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import org.parceler.Parcels;
 
@@ -68,6 +71,7 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,9 +85,35 @@ public class DetailActivity extends AppCompatActivity {
         tvDetailDesc = findViewById(R.id.tvDetailDesc);
         tvLikes = findViewById(R.id.tvLikes);
         ivPostPic = findViewById(R.id.ivPostPic);
+        rvComments = findViewById(R.id.rvComments);
         ibHeart = findViewById(R.id.ibHeart);
 
-        rvComments = findViewById(R.id.rvComments);
+        tvLikes.setText(post.getLikesCount());
+        if (post.isLikedByCurrentUser()) {
+            ibHeart.setBackgroundResource(R.drawable.ufi_heart_active);
+        }
+        else {
+            ibHeart.setBackgroundResource(R.drawable.ufi_heart);
+        }
+
+        ibHeart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<ParseUser> likedBy = post.getLikedBy();
+                if (post.isLikedByCurrentUser()) {
+                    // unlike
+                    post.unlike();
+                    ibHeart.setBackgroundResource(R.drawable.ufi_heart);
+                }
+                else {
+                    // like
+                    post.like();
+                    ibHeart.setBackgroundResource(R.drawable.ufi_heart_active);
+                }
+                tvLikes.setText(post.getLikesCount());
+            }
+        });
+
         adapter = new CommentsAdapter();
         rvComments.setLayoutManager(new LinearLayoutManager(this));
         rvComments.setAdapter(adapter);

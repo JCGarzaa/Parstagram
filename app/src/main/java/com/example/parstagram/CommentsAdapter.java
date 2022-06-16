@@ -31,7 +31,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
         holder.bind(comment);
     }
 
-
     @Override
     public int getItemCount() {
         return mComments.size();
