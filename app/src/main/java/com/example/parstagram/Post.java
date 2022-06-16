@@ -24,6 +24,7 @@ public class Post extends ParseObject {
     public static final String KEY_IMAGE = "image";
     public static final String KEY_USER = "user";
     public static final String KEY_LIKED_BY = "likedBy";
+    public static final String KEY_PFP = "profilePic";
 
     public ParseFile getMedia() {
         return getParseFile("media");
@@ -42,17 +43,19 @@ public class Post extends ParseObject {
     public ParseFile getImage() {
         return getParseFile(KEY_IMAGE);
     }
+
+    public ParseFile getPFP() { return getUser().getParseFile(KEY_PFP); }
+
     public void setImage(ParseFile file) {
         put(KEY_IMAGE, file);
     }
-
     public ParseUser getUser() {
         return getParseUser(KEY_USER);
     }
+
     public void setUser(ParseUser user) {
         put(KEY_USER, user);
     }
-
     public List<ParseUser> getLikedBy() {
         List<ParseUser> likedBy = getList(KEY_LIKED_BY);
         if (likedBy == null) {
@@ -60,6 +63,7 @@ public class Post extends ParseObject {
         }
         return getList(KEY_LIKED_BY);
     }
+
     public void setLikedBy(List<ParseUser> newLikedBy) { put(KEY_LIKED_BY, newLikedBy); }
 
     public String getLikesCount() {

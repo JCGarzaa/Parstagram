@@ -64,6 +64,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private ImageView ivImage;
         private TextView tvDescription;
         private ImageButton ibHeart;
+        private ImageView ivPFP;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -71,6 +72,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ivImage = itemView.findViewById(R.id.ivImage);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             ibHeart = itemView.findViewById(R.id.ibHeart);
+            ivPFP = itemView.findViewById(R.id.ivProfilePic);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
@@ -82,6 +84,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             if (image != null) {
                 Glide.with(context).load(image.getUrl()).into(ivImage);
             }
+            ParseFile pfp = post.getPFP();
+            if (pfp != null) {
+                Glide.with(context).load(pfp.getUrl()).into(ivPFP);
+            }
+            else {
+                Glide.with(context).load(R.drawable.icon).into(ivPFP);
+            }
+
             ivImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -90,6 +100,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                     context.startActivity(i);
                 }
             });
+
+
 
             if (post.isLikedByCurrentUser()) {
                 ibHeart.setBackgroundResource(R.drawable.ufi_heart_active);

@@ -20,8 +20,6 @@ import com.parse.FindCallback;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import org.parceler.Parcels;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -35,6 +33,7 @@ public class DetailActivity extends AppCompatActivity {
     public TextView tvDetailDesc;
     public  TextView tvLikes;
     public ImageView ivPostPic;
+    public ImageView ivPFP;
     public ImageButton ibHeart;
     public ImageButton ibComment;
     public ImageButton ibDirectMessage;
@@ -85,6 +84,7 @@ public class DetailActivity extends AppCompatActivity {
         tvDetailDesc = findViewById(R.id.tvDetailDesc);
         tvLikes = findViewById(R.id.tvLikes);
         ivPostPic = findViewById(R.id.ivPostPic);
+        ivPFP = findViewById(R.id.ivProfilePic);
         rvComments = findViewById(R.id.rvComments);
         ibHeart = findViewById(R.id.ibHeart);
 
@@ -129,9 +129,7 @@ public class DetailActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
         ibDirectMessage = findViewById(R.id.ibDM);
-
 
         // populate views
         String rawTime = post.getCreatedAt().toString();
@@ -141,6 +139,13 @@ public class DetailActivity extends AppCompatActivity {
         tvDetailDesc.setText(post.getDescription());
         Glide.with(this).load(post.getImage().getUrl()).into(ivPostPic);
         int radius = 50;
+        if (post.getPFP() != null) {
+            Glide.with(this).load(post.getPFP().getUrl()).into(ivPFP);
+        }
+        else {
+            Log.i("detail", "WOOOOOOOOO");
+            Glide.with(this).load(R.drawable.icon).into(ivPFP);
+        }
 
     }
 
