@@ -56,11 +56,11 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new PostsFragment();
                         break;
                     case R.id.action_compose:
-                        fragment = new ComposeFragment(MainActivity.this);
+                        fragment = new ComposeFragment();
                         break;
                     case R.id.action_profile:
                     default:
-                        fragment = new ProfileFragment();
+                        fragment = new ProfileFragment(MainActivity.this);
                         break;
                 }
                 fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();

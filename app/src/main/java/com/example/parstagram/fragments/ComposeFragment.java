@@ -75,16 +75,6 @@ public class ComposeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ivPostImage = view.findViewById(R.id.ivPostImage);
         etDescription = view.findViewById(R.id.etDescription);
-
-        btnLogout = view.findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ParseUser.logOut();
-                mainActivity.goLogin();      // go back to login screen
-                Toast.makeText(getContext(), "Logout success", Toast.LENGTH_SHORT).show();
-            }
-        });
         btnSubmit = view.findViewById(R.id.btnSubmit);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
