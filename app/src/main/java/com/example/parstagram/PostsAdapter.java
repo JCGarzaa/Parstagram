@@ -46,14 +46,11 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     public int getItemCount() {
         return posts.size();
     }
-
-    // Clean all elements of the recycler
     public void clear() {
         posts.clear();
         notifyDataSetChanged();
     }
 
-    // Add a list of items -- change to type used
     public void addAll(List<Post> list) {
         posts.addAll(list);
         notifyDataSetChanged();
@@ -64,7 +61,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         private ImageView ivImage;
         private TextView tvDescription;
         private ImageButton ibHeart;
-        private ImageView ivPFP;
+        private ImageButton ibProfilePic;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -72,7 +69,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ivImage = itemView.findViewById(R.id.ivImage);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             ibHeart = itemView.findViewById(R.id.ibHeart);
-            ivPFP = itemView.findViewById(R.id.ivProfilePic);
+            ibProfilePic = itemView.findViewById(R.id.ibPFP);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
@@ -86,10 +83,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             }
             ParseFile pfp = post.getPFP();
             if (pfp != null) {
-                Glide.with(context).load(pfp.getUrl()).into(ivPFP);
+                Glide.with(context).load(pfp.getUrl()).into(ibProfilePic);
             }
             else {
-                Glide.with(context).load(R.drawable.icon).into(ivPFP);
+                Glide.with(context).load(R.drawable.icon).into(ibProfilePic);
             }
 
             ivImage.setOnClickListener(new View.OnClickListener() {
@@ -101,15 +98,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 }
             });
 
-
-
             if (post.isLikedByCurrentUser()) {
                 ibHeart.setBackgroundResource(R.drawable.ufi_heart_active);
             }
             else {
                 ibHeart.setBackgroundResource(R.drawable.ufi_heart);
             }
-
         }
     }
 }

@@ -1,45 +1,74 @@
-package com.example.parstagram;
+package com.example.parstagram.fragments;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import com.example.parstagram.EndlessRecyclerViewScrollListener;
+import com.example.parstagram.MainActivity;
+import com.example.parstagram.Post;
+import com.example.parstagram.PostsAdapter;
+import com.example.parstagram.R;
 import com.parse.FindCallback;
 import com.parse.ParseQuery;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FeedActivity extends AppCompatActivity {
-    public static final String TAG = "FeedActivity";
+
+public class PostsFragment extends Fragment {
+    public static final String TAG = "PostFragment";
 
     private RecyclerView rvPosts;
-    private SwipeRefreshLayout swipeContainer;
-    private EndlessRecyclerViewScrollListener scrollListener;
+    protected SwipeRefreshLayout swipeContainer;
+    protected EndlessRecyclerViewScrollListener scrollListener;
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
+    public MainActivity mainActivity;
+
+    public PostsFragment() {
+        // Required empty public constructor
+    }
+
+    public PostsFragment(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_feed);
+    }
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_posts, container, false);
+    }
 
-        rvPosts = findViewById(R.id.rvPosts);
-        // initialize the array that will hold posts and create a PostsAdapter
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        rvPosts = view.findViewById(R.id.rvPosts);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+
         allPosts = new ArrayList<>();
-        adapter = new PostsAdapter(this, allPosts);
+        adapter = new PostsAdapter(getContext(), allPosts);
         rvPosts.setAdapter(adapter);
         rvPosts.setLayoutManager(layoutManager);
 
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
-        // Setup refresh listener which triggers new data loading
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        // refresh listener triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -61,7 +90,6 @@ public class FeedActivity extends AppCompatActivity {
         };
         rvPosts.setLayoutManager(layoutManager);
         rvPosts.addOnScrollListener(scrollListener);
-
     }
 
     @Override
@@ -71,8 +99,7 @@ public class FeedActivity extends AppCompatActivity {
         queryPosts(0);
     }
 
-    private void queryPosts(int skip) {
-        // specify what type of data we want to query - Post.class
+    protected  void queryPosts(int skip) {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         // include data referred by user key
         query.include(Post.KEY_USER);
@@ -88,7 +115,6 @@ public class FeedActivity extends AppCompatActivity {
             public void done(List<Post> posts, com.parse.ParseException e) {
                 // check for errors
                 if (e != null) {
-                    Log.e(TAG, "Issue with getting posts", e);
                     return;
                 }
                 // save received posts to list and notify adapter of new data

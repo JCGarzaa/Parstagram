@@ -33,14 +33,13 @@ public class DetailActivity extends AppCompatActivity {
     public TextView tvDetailDesc;
     public  TextView tvLikes;
     public ImageView ivPostPic;
-    public ImageView ivPFP;
+    public ImageButton ibProfilePic;
     public ImageButton ibHeart;
     public ImageButton ibComment;
     public ImageButton ibDirectMessage;
     public RecyclerView rvComments;
     public CommentsAdapter adapter;
     public Post post;
-
 
     private static final int SECOND_MILLIS = 1000;
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
@@ -84,11 +83,26 @@ public class DetailActivity extends AppCompatActivity {
         tvDetailDesc = findViewById(R.id.tvDetailDesc);
         tvLikes = findViewById(R.id.tvLikes);
         ivPostPic = findViewById(R.id.ivPostPic);
-        ivPFP = findViewById(R.id.ivProfilePic);
+        ibProfilePic = findViewById(R.id.ibProfilePic);
         rvComments = findViewById(R.id.rvComments);
         ibHeart = findViewById(R.id.ibHeart);
+        ibComment = findViewById(R.id.ibComment);
+        ibDirectMessage = findViewById(R.id.ibDM);
 
+        String rawTime = post.getCreatedAt().toString();
+        tvTimestamp.setText(getRelativeTimeAgo(rawTime));
+        tvScreenName.setText(post.getUser().getUsername());
+        tvNameBelowHeart.setText(post.getUser().getUsername());
+        tvDetailDesc.setText(post.getDescription());
         tvLikes.setText(post.getLikesCount());
+        Glide.with(this).load(post.getImage().getUrl()).into(ivPostPic);
+        if (post.getPFP() != null) {
+            Glide.with(this).load(post.getPFP().getUrl()).into(ibProfilePic);
+        }
+        else {
+            Glide.with(this).load(R.drawable.icon).into(ibProfilePic);
+        }
+
         if (post.isLikedByCurrentUser()) {
             ibHeart.setBackgroundResource(R.drawable.ufi_heart_active);
         }
@@ -101,12 +115,10 @@ public class DetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 List<ParseUser> likedBy = post.getLikedBy();
                 if (post.isLikedByCurrentUser()) {
-                    // unlike
                     post.unlike();
                     ibHeart.setBackgroundResource(R.drawable.ufi_heart);
                 }
                 else {
-                    // like
                     post.like();
                     ibHeart.setBackgroundResource(R.drawable.ufi_heart_active);
                 }
@@ -114,13 +126,6 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        adapter = new CommentsAdapter();
-        rvComments.setLayoutManager(new LinearLayoutManager(this));
-        rvComments.setAdapter(adapter);
-
-        refreshComments();
-
-        ibComment = findViewById(R.id.ibComment);
         ibComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,24 +134,10 @@ public class DetailActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        ibDirectMessage = findViewById(R.id.ibDM);
-
-        // populate views
-        String rawTime = post.getCreatedAt().toString();
-        tvTimestamp.setText(getRelativeTimeAgo(rawTime));
-        tvScreenName.setText(post.getUser().getUsername());
-        tvNameBelowHeart.setText(post.getUser().getUsername());
-        tvDetailDesc.setText(post.getDescription());
-        Glide.with(this).load(post.getImage().getUrl()).into(ivPostPic);
-        int radius = 50;
-        if (post.getPFP() != null) {
-            Glide.with(this).load(post.getPFP().getUrl()).into(ivPFP);
-        }
-        else {
-            Log.i("detail", "WOOOOOOOOO");
-            Glide.with(this).load(R.drawable.icon).into(ivPFP);
-        }
-
+        adapter = new CommentsAdapter();
+        rvComments.setLayoutManager(new LinearLayoutManager(this));
+        rvComments.setAdapter(adapter);
+        refreshComments();
     }
 
     public String getRelativeTimeAgo(String rawJsonDate) {

@@ -44,7 +44,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHo
             super(view);
             tvAuthor = (TextView) view.findViewById(R.id.tvAuthor);
             tvBody = (TextView) view.findViewById(R.id.tvBody);
-            
         }
 
         public void bind(Comment comment) {
